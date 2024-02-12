@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  awesomepizza.web:
+    image: ${DOCKER_REGISTRY-}awesomepizzaweb
+    build:
+      context: .
+      dockerfile: AwesomePizza.Web/Dockerfile
+    ports:
+     - 8080:8080
+     - 8081:8081
+
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@name.it
+      PGADMIN_DEFAULT_PASSWORD: pass
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  local_pgdata:
+  pgadmin-data:

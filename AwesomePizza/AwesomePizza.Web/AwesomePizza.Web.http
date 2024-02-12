@@ -1,0 +1,6 @@
+@AwesomePizza.Web_HostAddress = http://localhost:5101
+
+GET {{AwesomePizza.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
