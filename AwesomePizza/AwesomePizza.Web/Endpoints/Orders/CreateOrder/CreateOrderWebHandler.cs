@@ -2,6 +2,7 @@
 using AwesomePizza.Application.Actions.Orders.CreateOrder;
 using AwesomePizza.Models.Dishes;
 using AwesomePizza.Web.Dto.Errors;
+using AwesomePizza.Web.Endpoints.Orders.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -16,14 +17,8 @@ public class CreateOrderWebHandler(IRequestSender<CreateOrderRequest, CreateOrde
         };
 
         var response = await requestSender.Send(request, cancellationToken);
-        return response.Match<IResult>(SuccessResponse, OneDishIsRequiredResponse, SomeDishesDontExistResponse);
+        return response.Match<IResult>(SuccessResponse, OneDishIsRequiredResponse, x => x.SomeDishesDontExistResponse());
     }
-
-    BadRequest<ErrorResponse> SomeDishesDontExistResponse(SomeDishesDontExist someDishesDontExist) =>
-        someDishesDontExist.NotExistentDishes
-                           .Select(Error.DishNotFound)
-                           .ToErrorResponse()
-                           .ToBadRequest();
 
     BadRequest<ErrorResponse> OneDishIsRequiredResponse(OneDishIsRequired oneDishIsRequired) =>
         Error.AtLeastOneDishIsRequired()

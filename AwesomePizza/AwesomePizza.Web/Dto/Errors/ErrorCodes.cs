@@ -9,4 +9,5 @@ public static class ErrorCodes
     public const string ORDER_WRONG_STATE = "ORDER_WRONG_STATE";
     public const string DISH_NOT_FOUND = "DISH_NOT_FOUND";
     public const string AT_LEAST_ONE_DISH_IS_REQUIRED = "AT_LEAST_ONE_DISH_IS_REQUIRED";
+    public const string DUPLIACTED_DISH = "DUPLICATED_DISH";
 }

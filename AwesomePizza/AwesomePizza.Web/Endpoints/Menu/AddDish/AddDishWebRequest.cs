@@ -8,3 +8,4 @@ public class AddDishWebRequest : IRequest<IResult>
     public string Description { get; init; } = null!;
     public int? Price { get; init; } 
 }
+    

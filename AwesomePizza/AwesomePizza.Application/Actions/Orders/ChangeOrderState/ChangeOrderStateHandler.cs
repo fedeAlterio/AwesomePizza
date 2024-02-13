@@ -1,12 +1,13 @@
 ﻿using AwesomePizza.Application.Abstractions.Repositories;
 using AwesomePizza.Application.Actions.Orders.Common.CommonResponses;
 using AwesomePizza.Application.Events;
+using AwesomePizza.Application.Events.Helpers;
 using AwesomePizza.Models.Orders;
 using MediatR;
 
 namespace AwesomePizza.Application.Actions.Orders.ChangeOrderState;
 
-public class ChangeOrderStateHandler(IOrderEventRepository orderEventRepository, IPublisher publisher)
+public class ChangeOrderStateHandler(IOrderEventRepository orderEventRepository, EventAggregator eventAggregator)
 {
     public async Task<ChangeOrderStateResponse> ChangeState(OrderId orderId, 
                                                             IEnumerable<OrderEventType> statesFromWhichIsAllowedToChange,
@@ -22,7 +23,7 @@ public class ChangeOrderStateHandler(IOrderEventRepository orderEventRepository,
 
         var completedEvent = lastEvent.ChangeState(destinationState);
         orderEventRepository.AddOrderEvent(completedEvent);
-        await publisher.Publish(new OrderStateChanged(orderId), cancellationToken);
+        eventAggregator.AddEvent(new OrderStateChanged(orderId));
         return new ChangeOrderStateSuccesfully();
     }
 }

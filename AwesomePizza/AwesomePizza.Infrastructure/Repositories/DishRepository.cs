@@ -35,4 +35,9 @@ internal class DishRepository : IDishRepository
     {
         return await _db.Dishes.AnyAsync(x => x.Name == name);
     }
+
+    public async Task<bool> RemoveDish(DishId dish, CancellationToken cancellationToken)
+    {
+        return await _db.Dishes.Where(x => x.Id == dish).ExecuteDeleteAsync(cancellationToken) > 0;
+    }
 }

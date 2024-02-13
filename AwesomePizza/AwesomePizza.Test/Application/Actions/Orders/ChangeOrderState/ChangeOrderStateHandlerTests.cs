@@ -92,8 +92,8 @@ public class ChangeOrderStateHandlerTests
     public ChangeOrderStateHandler GetHandler(Action<Mock<IOrderEventRepository>> orderEventRepositoryConfig)
     {
         var mock = new Mock<IOrderEventRepository>(MockBehavior.Strict);
-        var publisher = new Mock<IPublisher>();
+        
         orderEventRepositoryConfig(mock);
-        return new(mock.Object, publisher.Object);
+        return new(mock.Object, new());
     }
 }

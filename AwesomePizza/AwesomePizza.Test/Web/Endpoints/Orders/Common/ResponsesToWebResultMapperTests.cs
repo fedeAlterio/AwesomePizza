@@ -8,7 +8,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AwesomePizza.Test.Web.Endpoints.Orders.Common;
-public class OrderResponseToWebResultMapperTests
+public class ResponsesToWebResultMapperTests
 {
     [Fact]
     public void ShouldReturnOk_IfChangeStateSuccess()

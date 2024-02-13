@@ -21,7 +21,7 @@ public class AddDishWebHandler(IRequestSender<AddDishRequest, AddDishResponse> a
     }
 
     IResult DishWithSameNameAlreadyExistsResponse(DishWithSameNameAlreadyExists dishWithSameNameAlreadyExists) =>
-        Error.Generic($"A dish with the same name already exists {dishWithSameNameAlreadyExists.DishName.Value}")
+        Error.DuplicatedDish(dishWithSameNameAlreadyExists.DishName)
              .ToErrorResponse()
              .ToBadRequest();
 

@@ -1,11 +1,12 @@
 ﻿using AwesomePizza.Application.Actions.Orders.ChangeOrderState;
 using AwesomePizza.Application.Actions.Orders.Common.CommonResponses;
+using AwesomePizza.Application.Actions.Orders.CreateOrder;
 using AwesomePizza.Web.Dto.Errors;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AwesomePizza.Web.Endpoints.Orders.Common;
 
-public static class OrderResponseToWebResultMapper
+public static class ResponsesToWebResultMapper
 {
     public static NotFound<ErrorResponse> ToNotFound(this OrderNotFound orderNotFound) =>
         Error.OrderNotFound(orderNotFound.OrderId)
@@ -21,4 +22,10 @@ public static class OrderResponseToWebResultMapper
         changeOrderStateResponse.Match<IResult>(_ => TypedResults.Ok(), 
                                                 notFound => notFound.ToNotFound(), 
                                                 wrongState => wrongState.ToBadRequest());
+
+    public static BadRequest<ErrorResponse> SomeDishesDontExistResponse(this SomeDishesDontExist someDishesDontExist) =>
+        someDishesDontExist.NotExistentDishes
+                           .Select(Error.DishNotFound)
+                           .ToErrorResponse()
+                           .ToBadRequest();
 }

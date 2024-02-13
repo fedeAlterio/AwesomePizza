@@ -8,4 +8,5 @@ public interface IDishRepository
     Task<List<Dish>> FindById(IEnumerable<DishId> dishes, CancellationToken cancellationToken);
     void CreateDish(Dish dish);
     Task<bool> DishWithNameExists(DishName name);
+    Task<bool> RemoveDish(DishId dish, CancellationToken cancellationToken);
 }

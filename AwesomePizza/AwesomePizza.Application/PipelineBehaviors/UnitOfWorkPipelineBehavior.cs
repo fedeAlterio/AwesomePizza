@@ -2,10 +2,11 @@
 using System.Transactions;
 using AwesomePizza.Application.Abstractions;
 using AwesomePizza.Application.Actions.Abstractions;
+using AwesomePizza.Application.Events.Helpers;
 using MediatR;
 
 namespace AwesomePizza.Application.PipelineBehaviors;
-public class UnitOfWorkPipelineBehavior<TRequest, TResponse>(IDbContext appDbContext) : IPipelineBehavior<TRequest, TResponse> where TRequest : ICommand
+public class UnitOfWorkPipelineBehavior<TRequest, TResponse>(IDbContext appDbContext, EventAggregator eventAggregator, IPublisher publisher) : IPipelineBehavior<TRequest, TResponse> where TRequest : ICommand
 {
     int _isNested;
 
@@ -26,6 +27,15 @@ public class UnitOfWorkPipelineBehavior<TRequest, TResponse>(IDbContext appDbCon
         var ret = await next();
         await appDbContext.SaveChangesAsync(cancellationToken);
         transactionScope.Complete();
+        await PublishAllEvents(cancellationToken);
         return ret;
+    }
+
+    async Task PublishAllEvents(CancellationToken cancellationToken)
+    {
+        while (eventAggregator.TryGetNextEvent(out var @event))
+        {
+            await publisher.Publish(@event, cancellationToken);
+        }
     }
 }

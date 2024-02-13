@@ -1,5 +1,6 @@
 ﻿using AwesomePizza.Application.Abstractions;
 using AwesomePizza.Application.Actions.Orders.ChangeOrderState;
+using AwesomePizza.Application.Events.Helpers;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ public static class ApplicationDependenciesInstaller
         services.AddTransient(typeof(IRequestSender<,>), typeof(MediatRRequestSender<,>));
         services.AddTransient(typeof(IOptionalDependency<>), typeof(OptionalDependency<>));
         services.AddScoped<ChangeOrderStateHandler>();
+        services.AddScoped<EventAggregator>();
     }
 
     class OptionalDependency<T>(IServiceProvider services) : IOptionalDependency<T>
